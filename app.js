@@ -50,8 +50,8 @@ for (let row = 0; row < brickRowCount; row++) {
 const paddle = {
   x: canvas.width / 2 - 40, // Entire paddle width is 80, it's in the center so -40
   y: canvas.height - 20,
-  w: 80,
-  h: 10,
+  width: 80,
+  height: 10,
   speed: 8,
   dx: 0
 };
@@ -70,7 +70,7 @@ function drawBall() {
 // Draw paddle on canvas
 function drawPaddle() {
   ctx.beginPath();
-  ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
+  ctx.rect(paddle.x, paddle.y, paddle.width, paddle.height);
   ctx.fillStyle = '#0095dd';
   ctx.fill();
   ctx.closePath();
@@ -95,16 +95,61 @@ function drawBricks() {
   });
 }
 
+// Move paddle on canvas
+function movePaddle() {
+  paddle.x += paddle.dx;
+
+  // Wall detection
+  if (paddle.x + paddle.width > canvas.width) {
+    paddle.x = canvas.width - paddle.width;
+  }
+
+  if (paddle.x < 0) {
+    paddle.x = 0;
+  }
+}
+
 // Draw everything
 function draw() {
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   drawPaddle();
   drawBall();
   drawScore();
   drawBricks();
 }
 
-// Draw the game 
-draw();
+// Update canvas drawing and animation using window.requestAnimationFrame
+function update() {
+  movePaddle();
+
+  // Draw the game 
+  draw();
+
+  requestAnimationFrame(update);
+}
+
+update();
+
+// Keydown event 
+function keyDown(e) {
+  if (e.key === 'Right' || e.key === 'ArrowRight') {
+    paddle.dx = paddle.speed;
+  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+    paddle.dx = -paddle.speed;
+  }
+}
+
+function keyUp(e) {
+  if (e.key === 'Right' || e.key === 'ArrowRight' || e.key === 'Left' || e.key === 'ArrowLeft') {
+    paddle.dx = 0;
+  }
+}
+
+// Keyboard event handlers
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
 
 // Rules and close event handlers
 rulesBtn.addEventListener('click', () => rules.classList.add('show'));
