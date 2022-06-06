@@ -12,4 +12,4 @@ Game where you control a paddle with the arrow keys to bounce a ball up to break
 - Keep score
 - Add rules button with slider
 
-The application is live on: https://sattvikpalta.github.io/breakout/
+The application is live on: https://sttvk.github.io/breakout/
